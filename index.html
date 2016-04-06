@@ -5,6 +5,7 @@
 </head>
 <body>
 	<script type="text/javascript">
+		var gameOver = false;
 		// create the canvas with JS
 		var canvas = document.createElement('canvas');
 		// create a context to target the canvas
@@ -47,6 +48,33 @@
 		});
 
 		function update() {
+			// update the monster's position
+			var rand = Math.floor(Math.random()*16);
+			if (rand == 1) {
+				monsterLoc.x += 20;
+				if (monsterLoc.x > 440){
+					monsterLoc.x = 41;
+				}
+			} else if (rand == 2) {
+				monsterLoc.y += 20;
+				if (monsterLoc.y > 410){
+					monsterLoc.y = 41;
+				}
+			} else if (rand == 3) {
+				monsterLoc.x -= 20;
+				if (monsterLoc.x < 40){
+					monsterLoc.x = 439;
+				}
+			} else if (rand == 4){
+				monsterLoc.y -= 20;
+				if (monsterLoc.y < 40){
+					monsterLoc.y = 409;
+				}
+			} else {
+				// do nothing
+			}
+
+			// update the hero's position
 			if (38 in keysDown){
 				// the user pressed 'up'
 				if (heroLoc.y > 40){
@@ -78,11 +106,19 @@
 				heroLoc.y <= (monsterLoc.y + 32) &&
 				monsterLoc.y <= (heroLoc.y + 32))
 			{
-				console.log("collision!");
+				// the monster got you
+				gameOver = true;
 			}
 		}
 
 		function draw(){
+			if (gameOver === true) {
+				var reset = document.createElement('a');
+				reset.href = '/';
+				reset.text = 'Play again';
+				document.body.appendChild(reset);
+				return "game over";
+			}
 			// draw stuff here
 			context.drawImage(bgImg, 0, 0);
 			context.drawImage(hero, heroLoc.x, heroLoc.y);
