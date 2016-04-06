@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Goblins Game</title>
+</head>
+<body>
+	<script type="text/javascript">
+		// create the canvas with JS
+		var canvas = document.createElement('canvas');
+		// create a context to target the canvas
+		var context = canvas.getContext('2d');
+		// canvas dimensions will be set equal to the dimensions of the background image
+		canvas.width = 512;
+		canvas.height = 480;
+		// put the canvas in the DOM
+		document.body.appendChild(canvas);	
+
+		// put the background image on the canvas
+		var bgImg = new Image();
+		bgImg.src = 'img/background.png';
+
+		// make the hero
+		var hero = new Image();
+		hero.src = 'img/hero.png';
+		var heroLoc = {
+			x: 250,
+			y: 200
+		}
+
+		// make the monster
+		var monster = new Image();
+		monster.src = 'img/monster.png';
+		var monsterLoc = {
+			x: 400,
+			y: 350
+		}
+
+		// create a keypress handler 
+		var keysDown = {};
+		// put pressed keys into the keysPressed object
+		addEventListener('keydown', function(event){
+			console.log(event.keyCode);
+			keysDown[event.keyCode] = true;
+		});
+		addEventListener('keyup', function(event){
+			delete keysDown[event.keyCode];
+		});
+
+		function update() {
+			if (38 in keysDown){
+				// the user pressed 'up'
+				if (heroLoc.y > 40){
+					heroLoc.y -= 10;
+				}
+			}
+			if (40 in keysDown){
+				// the user pressed 'down'
+				if (heroLoc.y < 410) {
+					heroLoc.y += 10;
+				}
+			}
+			if (37 in keysDown){
+				// left arrow
+				if (heroLoc.x > 40) {
+					heroLoc.x -= 10;
+				}
+			}
+			if (39 in keysDown){
+				// right arrow
+				if (heroLoc.x < 440) {
+					heroLoc.x += 10;
+				}
+			}
+
+			// collision detection
+			if (heroLoc.x <= (monsterLoc.x + 32) &&
+				monsterLoc.x <= (heroLoc.x + 32) &&
+				heroLoc.y <= (monsterLoc.y + 32) &&
+				monsterLoc.y <= (heroLoc.y + 32))
+			{
+				console.log("collision!");
+			}
+		}
+
+		function draw(){
+			// draw stuff here
+			context.drawImage(bgImg, 0, 0);
+			context.drawImage(hero, heroLoc.x, heroLoc.y);
+			context.drawImage(monster, monsterLoc.x, monsterLoc.y);
+			update();
+			requestAnimationFrame(draw);
+		}
+
+		draw();
+
+	</script>
+</body>
+</html>
