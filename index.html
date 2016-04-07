@@ -5,6 +5,8 @@
 </head>
 <body>
 	<script type="text/javascript">
+		var plays = 0;
+		var message = "Played " + plays + " times.";
 		var gameOver = false;
 		// create the canvas with JS
 		var canvas = document.createElement('canvas');
@@ -49,7 +51,7 @@
 
 		function update() {
 			// update the monster's position
-			var rand = Math.floor(Math.random()*16);
+			var rand = Math.floor(Math.random()*12);
 			if (rand == 1) {
 				monsterLoc.x += 20;
 				if (monsterLoc.x > 440){
@@ -112,18 +114,34 @@
 		}
 
 		function draw(){
-			if (gameOver === true) {
-				var reset = document.createElement('a');
-				reset.href = '/';
-				reset.text = 'Play again';
-				document.body.appendChild(reset);
-				return "game over";
-			}
 			// draw stuff here
+			if (gameOver === true){
+				plays++;
+				// this is necessary to update the message
+				message = "Played " + plays + " times.";
+				// reset the positions of the hero and the monster
+				heroLoc = {
+					x: 250,
+					y: 200
+				}
+				monsterLoc = {
+					x: 400,
+					y: 350
+				}
+			}
+			// draw the background image, hero image, and monster image with their respective positions
 			context.drawImage(bgImg, 0, 0);
 			context.drawImage(hero, heroLoc.x, heroLoc.y);
 			context.drawImage(monster, monsterLoc.x, monsterLoc.y);
+			// draws the message
+			context.font = '16px Arial';
+			context.fillStyle = 'white';
+			context.fillText(message, 40, 50);
+			// reset the game-over indicator
+			gameOver = false;
+			// update the positions of the hero and the monster
 			update();
+			// makes the draw function an infinite loop
 			requestAnimationFrame(draw);
 		}
 
